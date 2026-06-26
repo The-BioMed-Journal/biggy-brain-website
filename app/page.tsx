@@ -1,5 +1,6 @@
 import Image from "next/image";
 import BrainInteractive from "./brain-interactive";
+import BrainScrollReveal from "./BrainScrollReveal";
 
 // ══════════════════════════════════════════════════════════════════════
 // STAT CARD DATA
@@ -162,6 +163,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ════════════════ BRAIN SCROLL REVEAL ════════════════ */}
+      <BrainScrollReveal />
 
       {/* ════════════════ BRAIN SECTION ════════════════ */}
       <section
