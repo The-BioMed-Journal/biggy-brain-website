@@ -140,7 +140,7 @@ export default function BrainScrollReveal() {
     <section ref={sectionRef} className="relative" style={sectionStyle}>
       <div className={["w-full", pinned ? "fixed top-0 left-0" : "absolute", !pinned && progress >= 1 ? "bottom-0" : "", !pinned && progress <= 0 ? "top-0" : ""].join(" ")}>
         <div className="w-full min-h-screen flex flex-col items-center justify-start pt-[5vh]">
-          <div className="w-full max-w-4xl mx-4">
+          <div className="w-full max-w-7xl mx-4">
 
             <div ref={cardRef} className="relative w-full aspect-[754/639] rounded-2xl overflow-hidden bg-[#060a12] border border-white/[0.07] shadow-[0_0_90px_rgba(59,130,246,0.1),inset_0_0_50px_rgba(0,0,0,0.5)]">
               <div className="absolute inset-0"><Image src="/preview.png" alt="" fill loading="eager" className="object-contain pointer-events-none" sizes="(max-width:768px) 100vw,896px" suppressHydrationWarning /></div>
