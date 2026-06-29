@@ -55,6 +55,13 @@ export default function HomePage() {
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             Biomed Research Initiative
           </span>
+        <h1 className="font-black tracking-tight leading-[1.08] uppercase text-[clamp(1.5rem,4vw,3rem)] mb-6">
+          Do you want to{" "}
+          <span className="inline-block text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.2)]">stop one</span>
+          <br className="hidden sm:block" />
+          {" "}from happening{" "}
+          <span className="text-white/30">to you?</span>
+        </h1>
           
           <p className="text-gray-400 text-sm md:text-base max-w-[48ch] mx-auto leading-relaxed mb-10 font-light">
             Nicotine rewires the adolescent brain at a cellular level. Explore the neural pathways, uncover vulnerabilities, and see what the scientific research reveals.
