@@ -1,4 +1,3 @@
-cat > ~/Downloads/biggy-brain-website/app/BrainScrollReveal.tsx << 'EOF'
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -14,6 +13,12 @@ interface HotspotData {
   y: string;
   content: string;
 }
+
+const BASELINE_HOTSPOTS: HotspotData[] = [
+  { id: 1, label: "01", title: "Brain Reward System", region: "Overall Brain Architecture", x: "50%", y: "48%", content: "The brain's reward and cognitive control systems involve several interconnected structures, primarily the Ventral Tegmental Area (VTA), nucleus accumbens, striatum, and prefrontal cortex (PFC), all of which work together to regulate reward, motivation, decision-making, and habit formation." },
+  { id: 2, label: "02", title: "Midbrain Reward Circuit", region: "VTA & Nucleus Accumbens", x: "46%", y: "63%", content: "The VTA contains dopamine-producing neurons that initiate reward signaling, while the nucleus accumbens and striatum process reinforcement and reward signaling. This shifts behavior toward habit-based responses with repeated stimulation. As nicotine mimics acetylcholine, it opens ion channels in the VTA. As a result, dopamine is released in the nucleus accumbens, which in turn activates the reward pathway." },
+  { id: 3, label: "03", title: "Prefrontal Cortex", region: "Frontal Lobe — Executive Control", x: "28%", y: "30%", content: "The PFC is responsible for executive functions such as planning, attention, and impulse control, and is one of the last brain regions to mature, resulting in extreme vulnerability to addiction during adolescence. These regions are connected through dopamine and acetylcholine signaling pathways that regulate learning and reinforcement. With repeated exposure to strong stimuli such as nicotine, the system undergoes neuroplastic changes that can alter gene expression, synaptic reorganization, and changes in dendritic spine density and length over time." },
+];
 
 const HOTSPOTS: HotspotData[] = [
   { id: 1, label: "01", title: "Mimicking Acetylcholine", region: "Step 1 — Receptor Hijack", x: "50%", y: "48%", content: "Nicotine is shaped almost like acetylcholine, the brain's natural signaling molecule, so it binds to the same nicotinic acetylcholine receptors (nAChRs). This tricks open ion channels, letting sodium and calcium rush into neurons and making them fire more than they normally would. Every single use re-triggers this same deception — there is no 'safe' exposure level where this doesn't happen." },
@@ -56,17 +61,7 @@ function Hotspot({ hs, pxX, pxY }: { hs: HotspotData; pxX: number; pxY: number }
       </div>
 
       {show && typeof window !== "undefined" && (
-        <div
-          style={{
-            position: "fixed",
-            top: tipPos.top,
-            left: tipPos.left,
-            transform: "translateY(-50%)",
-            width: 280,
-            zIndex: 999999,
-            pointerEvents: "none",
-          }}
-        >
+        <div style={{ position: "fixed", top: tipPos.top, left: tipPos.left, transform: "translateY(-50%)", width: 280, zIndex: 999999, pointerEvents: "none" }}>
           <div style={{ background: "rgba(2,6,23,0.97)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, overflow: "hidden", boxShadow: "0 0 30px rgba(6,182,212,0.3)" }}>
             <div style={{ height: 2, background: "linear-gradient(to right,#2563eb,#22d3ee,#2563eb)" }} />
             <div style={{ padding: "12px 16px 8px" }}>
@@ -129,7 +124,7 @@ export default function BrainScrollReveal() {
   const halfHalfOpacity = clampLerp(progress, [0, 0.25, 0.4], [1, 1, 0]);
   const baselineOpacity = clampLerp(progress, [0.25, 0.4, 0.6, 0.75], [0, 1, 1, 0]);
   const striatumOpacity = clampLerp(progress, [0.6, 0.75, 1], [0, 1, 1]);
-  const hotspotsActive = striatumOpacity > 0.6;
+  const hotspotsActive = baselineOpacity > 0.3 || striatumOpacity > 0.3;
   const brainScale = 1 + progress * 0.04;
 
   const sectionStyle: React.CSSProperties = {
@@ -140,7 +135,7 @@ export default function BrainScrollReveal() {
     <section ref={sectionRef} className="relative" style={sectionStyle}>
       <div className={["w-full", pinned ? "fixed top-0 left-0" : "absolute", !pinned && progress >= 1 ? "bottom-0" : "", !pinned && progress <= 0 ? "top-0" : ""].join(" ")}>
         <div className="w-full min-h-screen flex flex-col items-center justify-start pt-[5vh]">
-          <div className="w-full max-w-7xl mx-4">
+          <div className="w-full max-w-7xl mx-auto px-4">
 
             <div ref={cardRef} className="relative w-full aspect-[754/639] rounded-2xl overflow-hidden bg-[#060a12] border border-white/[0.07] shadow-[0_0_90px_rgba(59,130,246,0.1),inset_0_0_50px_rgba(0,0,0,0.5)]">
               <div className="absolute inset-0"><Image src="/preview.png" alt="" fill loading="eager" className="object-contain pointer-events-none" sizes="(max-width:768px) 100vw,896px" suppressHydrationWarning /></div>
@@ -154,7 +149,7 @@ export default function BrainScrollReveal() {
               <span className="absolute bottom-3 left-3 font-mono text-[9px] text-cyan-400/70 tracking-[0.2em] uppercase select-none" style={{ opacity: baselineOpacity }}>Baseline state</span>
               <span className="absolute bottom-3 left-3 font-mono text-[9px] text-cyan-400/70 tracking-[0.2em] uppercase select-none" style={{ opacity: hotspotsActive ? 0 : striatumOpacity }}>Striatum — reward circuit active</span>
 
-              {hotspotsActive && imgBox && HOTSPOTS.map((hs) => (
+              {hotspotsActive && imgBox && (striatumOpacity > 0.3 ? HOTSPOTS : BASELINE_HOTSPOTS).map((hs) => (
                 <Hotspot
                   key={hs.id}
                   hs={hs}
@@ -166,7 +161,7 @@ export default function BrainScrollReveal() {
 
             {hotspotsActive && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="flex flex-wrap justify-center gap-3 mt-6">
-                {HOTSPOTS.map((hs) => (
+                {(striatumOpacity > 0.3 ? HOTSPOTS : BASELINE_HOTSPOTS).map((hs) => (
                   <div key={hs.id} className="flex items-center gap-2 font-mono text-[10px] tracking-wider px-3.5 py-1.5 rounded-full border border-white/[0.06] text-gray-500 bg-white/[0.01]">
                     <span className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center text-[9px] font-bold">{hs.label}</span>
                     {hs.title}
@@ -221,4 +216,3 @@ function clampLerp(t: number, stops: number[], values: number[]): number {
   }
   return values[values.length - 1];
 }
-EOF
