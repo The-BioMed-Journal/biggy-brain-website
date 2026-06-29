@@ -56,7 +56,7 @@ export default function HomePage() {
             Biomed Research Initiative
           </span>
 
-          <h1 className="font-black tracking-tight leading-[1.08] uppercase text-[clamp(2.3rem,8vw,5rem)] mb-6">
+          <h1 className="font-black tracking-tight leading-[1.08] uppercase text-[clamp(1.5rem,4vw,3rem)] mb-6">
             Do you want to{" "}
             <span className="inline-block text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.2)]">stop one</span>
             <br className="hidden sm:block" />
