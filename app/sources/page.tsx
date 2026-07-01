@@ -180,7 +180,19 @@ export default function SourcesPage() {
         </h1>
 
         <p className="text-gray-400 font-sans font-normal text-sm mb-8 leading-relaxed">
-          The verified citations and research databases utilized for the neurological breakdown of nicotine processing within this platform can be reviewed below:
+          The verified citations and research databases utilized for the neurological breakdown of nicotine processing within this platform can be reviewed below, or on this{" "}
+          <a
+            href="https://docs.google.com/document/d/1-LAqKdD2ZjA4Zm3RRbso8s6RaJYhLEuUewrqR0r7hCk/edit?tab=t.0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-1 font-semibold text-[#ce55a5] hover:text-[#e26fb9] underline underline-offset-4 transition-colors"
+          >
+            MLA Page
+            <svg className="w-3 h-3 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-[#ce55a5] hover:text-[#e26fb9]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </a>
+          :
         </p>
 
         <ul className="divide-y divide-white/[0.05] text-gray-300 font-sans" role="list">
