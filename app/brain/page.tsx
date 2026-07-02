@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import BrainInteractive from "../brain-interactive";
+
+export const metadata: Metadata = {
+  title: "Zoomed In",
+};
 
 export default function BrainPage() {
   return (
