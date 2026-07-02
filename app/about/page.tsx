@@ -8,10 +8,22 @@ export default function AboutPage() {
         </h1>
 
         <p className="text-gray-300 font-serif text-base md:text-lg leading-relaxed mb-8 font-normal">
-          This platform is a research initiative made by a team under the BioMed Journal.
-          The BioMed Journal is a student led organization based in Bay Area aiming to bridge the
-          gap between research in lab and classroom. Our goal is to encourage students, while
-          equipping them with skills, to pursue research initiatives in their futures.
+          This interactive, educational model was made in collaboration with The Biomed Journal and Stanford REACH Lab. 
+          The BioMed Journal is a student-led organization founded with the purpose of encouraging biological research among students of all ages and providing resources and opportunities to do so. Visit @thebiomed_journal on Instagram.
+          Stanford REACH Lab is a group under the Stanford Department of Pediatric, aiming to “empower and promote adolescent and young adult health through collaborative research, education, and advocacy.”
+          <br/>
+          Credits:
+          <br />
+          Leads: Rania Khan and Haadiyah Pathan
+          <br />
+          Info Team: Anyoli Gupta, Krithi Chada, Navika Deepak, and Simrah Mustafa
+          <br />
+          Programming Team: Atharv Rajure, Akshun Chinara, Elina Mangla, and Sai Kolakaluri
+          <br />
+          Graphics Team: Anyoli Gupta, Krithi Chada, Simrah Mustafa, and Ujjvala Sridhar
+          <br />
+          <br />
+          To learn more, visit <a href="www.biomedjournal.org" target="_blank" rel="noopener noreferrer" className="text-[#ce55a5] hover:text-pink-400 transition-colors font-medium underline underline-offset-2">biomedjournal.org</a> and the <a href="med.stanford.edu/halpern-felsher-reach-lab.html" target="_blank" rel="noopener noreferrer" className="text-[#ce55a5] hover:text-pink-400 transition-colors font-medium underline underline-offset-2">Stanford REACH Lab</a>.
         </p>
 
         {/* Medical Disclaimer Frame */}

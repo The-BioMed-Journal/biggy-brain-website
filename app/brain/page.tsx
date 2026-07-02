@@ -1,21 +1,95 @@
-import BrainInteractive from "../brain-interactive";
+"use client";
 
-export default function BrainPage() {
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+
+export default function BrainInteractive() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    function onScroll() {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+
+      const scrollable = rect.height - vh;
+      if (scrollable <= 0) {
+        setProgress(0);
+        return;
+      }
+
+      const raw = -rect.top / scrollable;
+      const clamped = Math.min(Math.max(raw, 0), 1);
+
+      setProgress(clamped);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // smooth transitions
+  const plainOpacity = Math.max(1 - progress * 1.5, 0);
+  const partsOpacity = Math.min(progress * 1.5, 1);
+
   return (
-    <main className="bg-black min-h-screen pt-10 pb-24">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold font-serif mb-4 text-white uppercase tracking-tight">
-            Interactive Neural Mapping
-          </h1>
-          <p className="text-gray-400 font-sans font-normal max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Scroll down through the section window to advance the internal structures of the brain and interact with active dopamine reward hotspots.
-          </p>
-        </div>
+    <section ref={sectionRef} className="relative h-[250vh]">
+      {/* ALWAYS FIXED CENTER VIEWPORT */}
+      <div className="fixed inset-0 flex items-center justify-center bg-black">
+        <div className="relative w-full max-w-2xl px-4">
+          <div className="relative aspect-[754/639] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#060a12] shadow-[0_0_90px_rgba(0,0,0,0.6)]">
 
-        {/* Dedicated Interactive Component Wrapper */}
-        <BrainInteractive />
+            {/* Plain brain */}
+            <div className="absolute inset-0 transition-opacity" style={{ opacity: plainOpacity }}>
+              <Image
+                src="/brain.png"
+                alt="Plain brain"
+                fill
+                className="object-contain pointer-events-none"
+                priority
+              />
+            </div>
+
+            {/* Parts brain */}
+            <div className="absolute inset-0 transition-opacity" style={{ opacity: partsOpacity }}>
+              <Image
+                src="/partsbrain.png"
+                alt="Parts brain"
+                fill
+                className="object-contain pointer-events-none"
+                priority
+              />
+            </div>
+
+            {/* subtle overlay */}
+            <div
+              className="absolute inset-0 opacity-20 pointer-events-none"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.05) 2px,rgba(255,255,255,0.05) 4px)",
+              }}
+            />
+
+            {/* label */}
+            <div className="absolute top-3 left-3 text-[10px] font-mono text-white/30">
+              BRAIN · SCROLL
+            </div>
+            <div className="absolute top-3 right-3 text-[10px] font-mono text-white/30">
+              CENTER LOCKED
+            </div>
+
+          </div>
+        </div>
       </div>
-    </main>
+    </section>
   );
 }
