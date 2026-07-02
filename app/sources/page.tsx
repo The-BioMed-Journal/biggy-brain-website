@@ -168,7 +168,117 @@ const SCIENTIFIC_SOURCES = [
     href: "https://www.youtube.com/watch?v=-mHgPfXHzJE",
     title: "YouTube Video — Visualizing Addiction Pathways",
     desc: "Video breakdown detailing active neural systems, receptor mapping, and cellular behaviors."
-  }
+  },
+  {
+    href: "https://doi.org/10.1177/1073858418824256",
+    title: "The Neuroscientist — The Striatum's Role in Economic Behaviors",
+    desc: "Review journal article examining how the striatum governs rational and irrational decision-making circuits."
+  },
+  {
+    href: "https://www.brainfacts.org/archives/2011/addiction-and-brain-circuits",
+    title: "BrainFacts.org — Addiction and Brain Circuits",
+    desc: "Society for Neuroscience overview of how repeated substance exposure rewires brain circuitry."
+  },
+  {
+    href: "https://doi.org/10.1016/j.biocel.2004.09.009",
+    title: "Int'l Journal of Biochemistry & Cell Biology — Dopaminergic Neurons",
+    desc: "Cellular biology review of dopaminergic neuron structure and function."
+  },
+  {
+    href: "https://my.clevelandclinic.org/health/articles/22513-neurotransmitters",
+    title: "Cleveland Clinic — Neurotransmitters: What They Are, Functions & Types",
+    desc: "Clinical overview explaining the roles and types of chemical messengers in the nervous system."
+  },
+  {
+    href: "https://doi.org/10.1101/cshperspect.a012146",
+    title: "Cold Spring Harbor Perspectives — GABA and Glutamate in Nicotine Dependence",
+    desc: "Research review on the roles of inhibitory and excitatory neurotransmitter systems in nicotine dependence."
+  },
+  {
+    href: "https://doi.org/10.1016/B978-0-12-396456-4.00006-7",
+    title: "Progress in Molecular Biology — Signaling in Striatal Neurons",
+    desc: "Book chapter detailing phosphoprotein signaling cascades within striatal neurons."
+  },
+  {
+    href: "https://doi.org/10.1101/cshperspect.a012120",
+    title: "Cold Spring Harbor Perspectives — Adolescent Nicotine Exposure and Prefrontal Cortex",
+    desc: "Review of short- and long-term consequences of adolescent nicotine exposure on neuronal network function."
+  },
+  {
+    href: "https://doi.org/10.1016/j.bcp.2009.06.011",
+    title: "Biochemical Pharmacology — Nicotine-Induced Receptor Upregulation",
+    desc: "Study on the mechanisms underlying nicotinic receptor upregulation and its relevance to addiction."
+  },
+  {
+    href: "https://doi.org/10.1101/cshperspect.a039602",
+    title: "Cold Spring Harbor Perspectives — Glutamatergic Systems in Opioid Addiction",
+    desc: "Review of glutamatergic memory mechanisms underlying opioid addiction."
+  },
+  {
+    href: "https://doi.org/10.1111/j.1369-1600.2010.00213.x",
+    title: "Addiction Biology — Cognitive Effects of Nicotine: Genetic Moderators",
+    desc: "Research on genetic factors moderating the cognitive effects of nicotine."
+  },
+  {
+    href: "https://doi.org/10.3389/fnins.2025.1670883",
+    title: "Frontiers in Neuroscience — Nicotine and Neuronal Nicotinic Acetylcholine Receptors",
+    desc: "Review unraveling the mechanisms of nicotine addiction via neuronal nicotinic acetylcholine receptors."
+  },
+  {
+    href: "https://doi.org/10.1007/978-3-030-81147-1_4",
+    title: "Advances in Experimental Medicine and Biology — The Brain's Reward System in Health and Disease",
+    desc: "Book chapter overview of reward system function and dysfunction."
+  },
+  {
+    href: "https://doi.org/10.1016/j.neuropharm.2013.05.042",
+    title: "Neuropharmacology — Glutamatergic and GABAergic Systems in Nicotine Dependence",
+    desc: "Study on glutamatergic and GABAergic involvement in nicotine dependence and implications for smoking cessation therapies."
+  },
+  {
+    href: "https://doi.org/10.1124/mol.111.076661",
+    title: "Molecular Pharmacology — Nicotine Persistently Activates VTA Dopaminergic Neurons",
+    desc: "Research on nicotine's activation of VTA dopaminergic neurons via α4 and α6 subunit-containing receptors."
+  },
+  {
+    href: "https://learnmem.cshlp.org/content/22/9/452",
+    title: "Learning & Memory — Reward Processing by the Dorsal Raphe Nucleus",
+    desc: "Review of serotonergic and other reward-processing mechanisms in the dorsal raphe nucleus."
+  },
+  {
+    href: "https://lpsonline.sas.upenn.edu/features/neuroscience-and-addiction-unraveling-brains-reward-system",
+    title: "Penn LPS Online — Neuroscience and Addiction: Unraveling the Brain's Reward System",
+    desc: "University of Pennsylvania overview of the neuroscience underlying addiction and reward."
+  },
+  {
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK557825/",
+    title: "StatPearls — Physiology, Acetylcholine",
+    desc: "Reference chapter on acetylcholine physiology and receptor function."
+  },
+  {
+    href: "https://doi.org/10.1038/s41380-019-0484-3",
+    title: "Molecular Psychiatry — Nucleus Accumbens Medium Spiny Neurons Subtypes",
+    desc: "Study on how distinct medium spiny neuron subtypes in the nucleus accumbens signal reward and aversion."
+  },
+  {
+    href: "https://doi.org/10.1016/j.baga.2016.02.001",
+    title: "Basal Ganglia — Striatal Dopamine Neurotransmission",
+    desc: "Review of dopamine release and uptake regulation within striatal circuitry."
+  },
+  {
+    href: "https://science.howstuffworks.com/nicotine3.htm",
+    title: "HowStuffWorks — How Nicotine Works",
+    desc: "General-audience explainer on nicotine's path through the body and its effects on the brain."
+  },
+  {
+    href: "https://doi.org/10.1016/j.neuropharm.2020.108256",
+    title: "Neuropharmacology — Nicotinic Acetylcholine Receptors and Nicotine Addiction: A Brief Introduction",
+    desc: "Introductory review of nicotinic acetylcholine receptor involvement in nicotine addiction."
+  },
+  {
+    href: "https://doi.org/10.1038/nature07768",
+    title: "Nature — Nicotine Binding to Brain Receptors Requires a Strong Cation-π Interaction",
+    desc: "Structural study identifying the cation-π interaction underlying nicotine's binding to brain receptors."
+  },
 ];
 
 export default function SourcesPage() {
