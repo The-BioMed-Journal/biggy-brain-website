@@ -21,7 +21,7 @@ export default function RootLayout({
               Homepage
             </a>
             <a href="/brain" className="text-white no-underline font-serif font-bold text-[1.1rem] tracking-[0.05em] hover:underline transition-all">
-              Brain
+              Zoomed In Brain
             </a>
             <a href="/about" className="text-white no-underline font-serif font-bold text-[1.1rem] tracking-[0.05em] hover:underline transition-all">
               About Us
