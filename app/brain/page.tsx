@@ -1,233 +1,263 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 
-interface HotspotData {
-  id: number;
-  label: string;
-  title: string;
-  region: string;
-  x: string;
-  y: string;
-  content: string;
-}
-
-const HOTSPOTS: HotspotData[] = [
+const REGIONS = [
   {
-    id: 1,
-    label: "1",
-    title: "Reward & Cognitive Control",
-    region: "Overall Architecture",
-    x: "55%",
-    y: "45%",
-    content:
-      "The brain’s reward and cognitive control systems involve several interconnected structures, primarily the Ventral Tegmental Area (VTA), nucleus accumbens, striatum, and prefrontal cortex (PFC), all of which work together to regulate reward, motivation, decision-making, and habit formation.",
+    id: "reward",
+    title: "Parts",
+    src: "/partsbrain.png",
+    fit: "object-contain",
+    stageIndex: 1,
+    short: "",
+    long: "",
+    learnMore: "",
   },
   {
-    id: 3,
-    label: "3",
-    title: "Prefrontal Cortex",
-    region: "PFC",
-    x: "40%",
-    y: "50%",
-    content:
-      "The PFC is responsible for executive functions such as planning, attention, and impulse control, and is extremely vulnerable to addiction for adolescents. With repeated exposure to nicotine, the system undergoes neuroplastic changes that can alter gene expression, synaptic reorganization, and changes in dendritic spine density and length over time.",
+    id: "vta",
+    title: "Dopamine Overload - VTA",
+    src: "/VTA-In.png",
+    fit: "object-contain",
+    stageIndex: 2,
+    short: "Nicotine tricks your glutamatergic and gabaergic neurons into releasing too much dopamine.",
+    long: "Nicotine enters your bloodstream, latching onto two structures: the glutamatergic and gabaergic [ga-buh-er-jik] neurons. It latches on because it mimics the shape of a friendlier neurotransmitter: acetylcholine. Usually, glutamate causes dopamine to be released and GABA regulates the glutamate, so that your brain isn't overstimulated. However, when nicotine attaches onto these neurons, too much glutamate is released and too little GABA is released. Therefore, too much dopamine is released from your VTA.",
+    learnMore: "The Ventral Tegmental Area contains dopamine-producing neurons that initiate reward signaling. As nicotine mimics acetylcholine, it opens ion channels in the VTA. As a result, dopamine is released in the nucleus accumbens, which in turn hinders the reward pathway.",
   },
   {
-    id: 4,
-    label: "4",
-    title: "Striatum",
-    region: "Dorsal & Ventral",
-    x: "53%",
-    y: "63%",
-    content:
-      "The striatum plays an essential role in the reward circuit, and has a dorsal and ventral part. The dorsal focuses on habits while the ventral focuses on motivation and dopamine. When nicotine is inhaled, it enters the bloodstream and triggers a large dopamine release in the ventral striatum. Over time, this can strengthen nicotine-related habits in the dorsal striatum.",
+    id: "striatum",
+    title: "Habit Formation - Striatum",
+    src: "/Striatum-In.png",
+    fit: "object-contain",
+    stageIndex: 3,
+    short: "The excess dopamine floods your medium spiny neurons, resulting in long-term habit formation.",
+    long: "Your brain memorizes: As the dopamine from your Ventral Tegmental Area (VTA) floods, assisted by your DA neurons, your medium spiny neurons (MSN) start to receive it. The constant firing results in long term potentiation (habit formation) in your striatum.",
+    learnMore: "The striatum plays an essential role in the reward circuit, and has a dorsal (upper) and ventral (lower) parts. The dorsal focuses on habits while the ventral focus on motivation and dopamine. When nicotine is inhaled, it enters the blood stream, transferring a big dopamine release to the ventral striatum. Whenever you see tobacco, the ventral will reinstate its memory and reward circuits, and with continuous use of tobacco, memory of nicotine usage will go up into the dorsal striatum, making tobacco a habit.",
   },
   {
-    id: 5,
-    label: "5",
-    title: "Ventral Tegmental Area",
-    region: "VTA",
-    x: "57%",
-    y: "75%",
-    content:
-      "The VTA contains dopamine-producing neurons that initiate reward signaling. As nicotine mimics acetylcholine, it opens ion channels in the VTA. As a result, dopamine is released in the nucleus accumbens, which in turn alters the reward pathway.",
+    id: "pfc",
+    title: "Can't Say No - PFC",
+    src: "/PFC-In.png",
+    fit: "object-contain",
+    stageIndex: 4,
+    short: "Nicotine tricks your glutamatergic and gabaergic neurons into releasing too much glutamate, making you lose control of your impulses.",
+    long: "Nicotine enters your Prefrontal Cortex, and latches onto your glutamatergic and gabaergic neurons (just like in your VTA!). Again, nicotine mimics the shape of acetylcholine. Due to this, too much glutamate is released and too little GABA is released. Instead of releasing dopamine, the excess glutamate overloads the Pyramidal neurons, causing you to lose your ability to control your impulses.",
+    learnMore: "The Prefrontal Cortex is responsible for executive functions such as planning, attention, and impulse control, and is extremely vulnerable to addiction for adolescents. With repeated exposure to nicotine, the system undergoes neuroplastic changes that can alter gene expression, synaptic reorganization, and changes in dendritic spine (the site for learning and memory) density and length over time.",
   },
 ];
 
 export default function BrainInteractive() {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [activeModalId, setActiveModalId] = useState<number | null>(null);
-  const selectedHotspot = HOTSPOTS.find((h) => h.id === activeModalId) ?? null;
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [pinned, setPinned] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [learnMoreOpen, setLearnMoreOpen] = useState(false);
 
-  const selectedImage = selectedId
-    ? selectedId === 3
-      ? "/pfc.png"
-      : selectedId === 4
-        ? "/striatum.png"
-        : selectedId === 5
-          ? "/vta.png"
-          : "/blackbrain.png"
-    : "/partsbrain.png";
+  useEffect(() => {
+    function onScroll() {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      if (rect.top > 0) {
+        setPinned(false); setProgress(0);
+      } else if (rect.bottom < vh) {
+        setPinned(false); setProgress(1);
+      } else {
+        setPinned(true);
+        setProgress(scrollable > 0 ? Math.min(Math.max(-rect.top / scrollable, 0), 1) : 0);
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    function clearOnScroll() { setSelectedId(null); }
+    window.addEventListener("wheel", clearOnScroll, { passive: true });
+    window.addEventListener("touchmove", clearOnScroll, { passive: true });
+    return () => {
+      window.removeEventListener("wheel", clearOnScroll);
+      window.removeEventListener("touchmove", clearOnScroll);
+    };
+  }, []);
+
+  const TOTAL_STAGES = 5;
+
+  function stageOpacity(stageIndex: number) {
+    const zoneSize = 1 / TOTAL_STAGES;
+    const zoneStart = stageIndex * zoneSize;
+    const zoneEnd = zoneStart + zoneSize;
+    const fadeWidth = zoneSize * 0.4;
+    if (progress < zoneStart - fadeWidth) return 0;
+    if (progress < zoneStart + fadeWidth) {
+      return Math.min(Math.max((progress - (zoneStart - fadeWidth)) / (fadeWidth * 2), 0), 1);
+    }
+    if (progress < zoneEnd - fadeWidth) return 1;
+    if (progress < zoneEnd + fadeWidth) {
+      return 1 - Math.min(Math.max((progress - (zoneEnd - fadeWidth)) / (fadeWidth * 2), 0), 1);
+    }
+    return 0;
+  }
+
+  const stages = [
+    { src: "/brain.png", alt: "Plain brain", fit: "object-contain" },
+    { src: "/partsbrain.png", alt: "Brain parts illustration", fit: "object-contain" },
+    { src: "/VTA-In.png", alt: "Ventral Tegmental Area zoom", fit: "object-contain" },
+    { src: "/Striatum-In.png", alt: "Striatum zoom", fit: "object-contain" },
+    { src: "/PFC-In.png", alt: "Prefrontal Cortex zoom", fit: "object-contain" },
+  ];
+
+  const selectedRegion = REGIONS.find((r) => r.id === selectedId) ?? null;
+
+  let currentStageIndex = 0;
+  let maxOp = 0;
+  stages.forEach((_, i) => {
+    const op = stageOpacity(i);
+    if (op > maxOp) {
+      maxOp = op;
+      currentStageIndex = i;
+    }
+  });
+
+  const activeRegion = selectedRegion ?? REGIONS.find((r) => r.stageIndex === currentStageIndex) ?? null;
+  const showLearnMore = activeRegion && activeRegion.id !== "reward";
 
   return (
-    <main className="min-h-screen bg-black px-4 py-12 text-white">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-8">
-        <div className="text-center">
-          <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.35em] text-[#ce55a5]">
-            Interactive Brain Map
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Explore the brain regions linked to nicotine addiction
-          </h1>
-        </div>
+    <main className="min-h-screen bg-black text-white">
+      <div className="text-center pt-12 px-4">
+        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.35em] text-[#ce55a5]">
+          Interactive Brain Map
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Explore the brain regions linked to nicotine addiction
+        </h1>
+        <p className="mt-3 text-sm text-white/50">Scroll to zoom through each region, or click a button</p>
+      </div>
 
-        <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
-          <div className="w-full max-w-2xl">
-            <div className="relative aspect-[754/639] w-full overflow-hidden rounded-2xl border border-white/[0.07] bg-[#060a12] shadow-[0_0_90px_rgba(206,85,165,0.1),inset_0_0_50px_rgba(0,0,0,0.5)]">
-              <motion.div
-                key={selectedImage}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.35 }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={selectedImage}
-                  alt="Brain illustration"
-                  fill
-                  loading="eager"
-                  className="object-contain pointer-events-none"
-                  sizes="(max-width: 768px) 100vw, 672px"
-                  suppressHydrationWarning
-                />
-              </motion.div>
+      <section ref={sectionRef} className="relative h-[500vh]">
+        <div
+          className={[
+            "w-full flex items-center justify-center",
+            pinned ? "fixed top-0 left-0 h-screen" : "absolute",
+            !pinned && progress >= 1 ? "bottom-0" : "",
+            !pinned && progress <= 0 ? "top-0 h-screen" : ""
+          ].join(" ")}
+        >
+          <div className="w-full max-w-6xl mx-auto px-4 flex flex-col lg:flex-row items-center gap-6 justify-center">
+            {/* Main brain image */}
+            <div className="w-full max-w-2xl">
+              <div className="relative w-full aspect-[754/639] rounded-2xl overflow-hidden bg-[#060a12] border border-white/[0.07] shadow-[0_0_90px_rgba(206,85,165,0.1),inset_0_0_50px_rgba(0,0,0,0.5)]">
+                {!selectedRegion && stages.map((stage, i) => (
+                  <div key={stage.src} className="absolute inset-0" style={{ opacity: stageOpacity(i) }}>
+                    <Image
+                      src={stage.src}
+                      alt={stage.alt}
+                      fill
+                      loading="eager"
+                      className={`${stage.fit} pointer-events-none`}
+                      sizes="(max-width: 768px) 100vw, 672px"
+                    />
+                  </div>
+                ))}
 
-              <div
-                className="absolute inset-0 pointer-events-none opacity-25"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px)",
-                }}
-                suppressHydrationWarning
-                aria-hidden
-              />
+                {selectedRegion && (
+                  <div className="absolute inset-0">
+                    <Image
+                      src={selectedRegion.src}
+                      alt={selectedRegion.title}
+                      fill
+                      loading="eager"
+                      className={`${selectedRegion.fit} pointer-events-none`}
+                      sizes="(max-width: 768px) 100vw, 672px"
+                    />
+                  </div>
+                )}
 
-              <span className="absolute top-3 left-3 font-mono text-[10px] text-white/20 select-none" aria-hidden>
-                BIGGY·BRAIN
-              </span>
-              <span className="absolute top-3 right-3 font-mono text-[10px] text-white/20 select-none" aria-hidden>
-                INTERACTIVE
-              </span>
-            </div>
-          </div>
-
-          <div className="w-full max-w-sm space-y-3 lg:mt-2">
-            {HOTSPOTS.map((hs) => {
-              const isSelected = selectedId === hs.id;
-
-              return (
                 <div
-                  key={hs.id}
-                  className={`overflow-hidden rounded-2xl border transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                    isSelected
-                      ? "border-[#ce55a5] bg-white text-black"
-                      : "border-white/10 bg-black/60 backdrop-blur-md"
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedId(hs.id);
-                      setActiveModalId(hs.id);
-                    }}
-                    className={`w-full px-5 py-4 text-left transition ${
-                      isSelected ? "text-black" : "text-white hover:bg-white/10"
-                    }`}
-                  >
-                    <div className="text-base font-semibold">{hs.title}</div>
+                  className="absolute inset-0 pointer-events-none opacity-25"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px)",
+                  }}
+                  aria-hidden
+                />
 
+                {showLearnMore && (
+                  <button
+                    onClick={() => setLearnMoreOpen(true)}
+                    className="absolute bottom-6 left-6 rounded-lg bg-white px-5 py-3 font-semibold text-black transition hover:bg-gray-200 z-20"
+                  >
+                    Learn More
+                  </button>
+                )}
+
+                <span className="absolute top-3 left-3 font-mono text-[10px] text-white/20 select-none" aria-hidden>
+                  BIGGY·BRAIN
+                </span>
+                <span className="absolute top-3 right-3 font-mono text-[10px] text-white/20 select-none" aria-hidden>
+                  INTERACTIVE
+                </span>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="w-full max-w-sm space-y-3">
+              {REGIONS.map((region) => {
+                const isActive = activeRegion?.id === region.id;
+                return (
+                  <button
+                    key={region.id}
+                    type="button"
+                    onClick={() => setSelectedId(region.id)}
+                    className={[
+                      "w-full rounded-2xl border px-5 py-4 text-left transition-all duration-300",
+                      isActive
+                        ? "border-[#ce55a5] bg-white text-black"
+                        : "border-white/10 bg-black/60 backdrop-blur-md text-white hover:bg-white/10",
+                    ].join(" ")}
+                  >
+                    <div className="text-base font-semibold">{region.title}</div>
                     <div
-                      className={`grid transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                        isSelected
-                          ? "mt-2 grid-rows-[1fr] opacity-100"
-                          : "grid-rows-[0fr] opacity-0"
+                      className={`grid transition-all duration-400 ${
+                        isActive && region.short ? "mt-2 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className={`text-sm leading-6 ${isSelected ? "text-black/70" : "text-white/70"}`}>
-                          {hs.region}
-                        </div>
+                        <p className="text-sm font-semibold leading-6 text-black">{region.short}</p>
+                        <p className="mt-2 text-sm leading-6 text-black/70">{region.long}</p>
                       </div>
                     </div>
                   </button>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <AnimatePresence>
-        {selectedHotspot && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ pointerEvents: "auto" }}>
-            <motion.div
-              className="absolute inset-0 bg-black/70 backdrop-blur-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              onClick={() => setActiveModalId(null)}
-            />
-
-            <motion.div
-              className="relative z-10 mb-2 w-full max-w-[460px] self-end md:mb-0 md:self-auto"
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ type: "spring", duration: 0.4 }}
-            >
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950/75 shadow-[0_0_50px_rgba(206,85,165,0.15),0_25px_50px_-12px_rgba(0,0,0,0.8)] backdrop-blur-xl">
-                <div className="h-[3px] bg-gradient-to-r from-pink-600 via-[#ce55a5] to-pink-600" />
-
-                <div className="flex items-start justify-between px-6 pt-5 pb-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.3em] text-[#ce55a5]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#ce55a5] shadow-[0_0_8px_rgba(206,85,165,0.8)] animate-pulse" />
-                      {selectedHotspot.region}
-                    </p>
-                    <h2 className="text-[1.25rem] font-black leading-snug tracking-tight text-white">
-                      {selectedHotspot.title}
-                    </h2>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setActiveModalId(null)}
-                    aria-label="Close"
-                    className="ml-4 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-xs leading-none text-gray-400 shadow-[0_2px_8px_rgba(0,0,0,0.4)] transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="mx-6 h-px bg-white/10" />
-                <p className="px-6 pt-4 pb-5 text-[13px] font-light leading-relaxed text-gray-300">
-                  {selectedHotspot.content}
-                </p>
-                <div className="flex items-center justify-between border-t border-white/[0.04] px-6 pb-4 pt-3">
-                  <span className="select-none font-mono text-[9px] tracking-wider text-gray-600">
-                    HOTSPOT_{selectedHotspot.label}
-                  </span>
-                  <span className="select-none font-mono text-[9px] tracking-wider text-[#ce55a5]/50">
-                    CLICK OUTSIDE TO CLOSE
-                  </span>
-                </div>
-              </div>
-            </motion.div>
+      {learnMoreOpen && activeRegion && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="w-full max-w-2xl rounded-[28px] border border-white/15 bg-black/90 p-8 text-white shadow-2xl">
+            <div className="mb-4 flex justify-between items-start">
+              <h3 className="text-2xl font-bold">{activeRegion.title}</h3>
+              <button
+                onClick={() => setLearnMoreOpen(false)}
+                className="text-sm text-white/70 hover:text-white ml-4"
+              >
+                Close
+              </button>
+            </div>
+            <p className="text-white/80 leading-8">{activeRegion.learnMore}</p>
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </main>
   );
 }
