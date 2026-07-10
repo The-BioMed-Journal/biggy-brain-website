@@ -8,9 +8,9 @@ export default function AboutPage() {
         </h1>
 
         <p className="text-gray-300 font-serif text-base md:text-lg leading-relaxed mb-8 font-normal">
-          This interactive, educational model was made in collaboration with The Biomed Journal and Stanford REACH Lab. 
+          This interactive, educational model was made in collaboration with The Biomed Journal with the guidance of a faculty from Stanford REACH Lab. 
           The BioMed Journal is a student-led organization founded with the purpose of encouraging biological research among students of all ages and providing resources and opportunities to do so. Visit @thebiomed_journal on Instagram.
-          Stanford REACH Lab is a group under the Stanford Department of Pediatric, aiming to “empower and promote adolescent and young adult health through collaborative research, education, and advocacy.”
+          Stanford REACH Lab is a group under the Stanford Department of Pediatrics, aiming to “empower and promote adolescent and young adult health through collaborative research, education, and advocacy.”
           <br/>
           Credits:
           <br />
