@@ -20,8 +20,8 @@ const REGIONS = [
     src: "/VTA-In.png",
     fit: "object-contain",
     stageIndex: 2,
-    short: "Nicotine tricks your glutamatergic and gabaergic neurons into releasing too much dopamine.",
-    long: "Nicotine enters your bloodstream, latching onto two structures: the glutamatergic and gabaergic [ga-buh-er-jik] neurons. It latches on because it mimics the shape of a friendlier neurotransmitter: acetylcholine. Usually, glutamate causes dopamine to be released and GABA regulates the glutamate, so that your brain isn't overstimulated. However, when nicotine attaches onto these neurons, too much glutamate is released and too little GABA is released. Therefore, too much dopamine is released from your VTA.",
+    short: "Nicotine attaches to your dopaminergic neuron (DA) like a lock-and-key mechanism. The DA neuron stores dopamine, and as nicotine latches on, it opens the channels. As a result, more dopamine floods in!",
+    long: "Nicotine attaches to specialized receptors on dopaminergic (DA) neurons through a lock-and-key mechanism. These receptors, called nicotinic acetylcholine receptors (nAChRs), normally respond to the neurotransmitter acetylcholine, but nicotine can activate them even more effectively. When nicotine binds to these receptors, ion channels open and dopamine floods in. It starts to produce feelings of pleasure.",
     learnMore: "The Ventral Tegmental Area contains dopamine-producing neurons that initiate reward signaling. As nicotine mimics acetylcholine, it opens ion channels in the VTA. As a result, dopamine is released in the nucleus accumbens, which in turn hinders the reward pathway.",
   },
   {
