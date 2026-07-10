@@ -6,7 +6,7 @@ import Image from "next/image";
 const REGIONS = [
   {
     id: "reward",
-    title: "Parts",
+    title: "Brain Regions",
     src: "/partsbrain.png",
     fit: "object-contain",
     stageIndex: 1,
@@ -231,7 +231,6 @@ export default function BrainInteractive() {
                     >
                       <div className="overflow-hidden">
                         <p className="text-sm font-semibold leading-6 text-black">{region.short}</p>
-                        <p className="mt-2 text-sm leading-6 text-black/70">{region.long}</p>
                       </div>
                     </div>
                   </button>
@@ -254,7 +253,7 @@ export default function BrainInteractive() {
                 Close
               </button>
             </div>
-            <p className="text-white/80 leading-8">{activeRegion.learnMore}</p>
+            <p className="text-white/80 leading-8">{activeRegion.long}</p>
           </div>
         </div>
       )}
