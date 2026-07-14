@@ -117,15 +117,58 @@ export default function BrainScrollReveal() {
     },
   ];
 
-  const selectedRegionData = regions.find(
-    (r) => r.id === selectedRegion
-  );
+  const selectedRegionData = regions.find((r) => r.id === selectedRegion);
 
   const shouldShowPreview =
     showSidebar &&
     hasInteracted &&
     previewVisible &&
     Boolean(selectedRegionData);
+
+  const sidebar = (
+    <>
+      {regions.map((region) => {
+        const active = selectedRegion === region.id;
+        return (
+          <div
+            key={region.id}
+            className={`mb-3 lg:mb-4 overflow-hidden rounded-2xl border transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+              active
+                ? "border-white bg-white text-black"
+                : "border-white/20 bg-black/60 backdrop-blur-md"
+            }`}
+          >
+            <button
+              onClick={() => {
+                if (region.id === "redirect") {
+                  router.push("/brain");
+                  return;
+                }
+                setSelectedRegion(region.id);
+                setHasInteracted(true);
+              }}
+              className={`w-full px-5 py-4 lg:px-8 lg:py-6 text-left transition ${
+                active ? "text-black" : "text-white hover:bg-white/10"
+              }`}
+            >
+              <div className="text-lg lg:text-2xl font-semibold">{region.label}</div>
+              <div
+                className={`grid transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+                  active ? "mt-2 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="text-sm lg:text-base leading-6 lg:leading-7 text-black/70">
+                    {region.description}
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        );
+      })}
+    </>
+  );
 
   return (
     <section ref={sectionRef} className="relative h-[250vh]">
@@ -135,47 +178,60 @@ export default function BrainScrollReveal() {
           pinned ? "fixed top-0 left-0" : "absolute",
         ].join(" ")}
       >
-        <div className="relative flex h-[90vh] w-[90vw] items-center justify-center">
+        {/* ── Mobile layout: stacked (brain box on top, buttons below) ── */}
+        <div className="flex lg:hidden flex-col w-full h-full px-3 pt-3 pb-4 gap-3">
+          <div className="relative w-full flex-1 min-h-0 rounded-2xl overflow-hidden bg-black">
+            <div className="absolute inset-0">
+              <Image src="/brickbrain.png" alt="Brick wall and brain" fill className="object-contain" priority />
+            </div>
+            <div className="absolute inset-0 transition-opacity" style={{ opacity: loopOpacity }}>
+              <Image src="/loopbrain.png" alt="Loop diagram" fill className="object-contain" priority />
+            </div>
+            <div className="absolute inset-0 transition-opacity" style={{ opacity: blackBrainOpacity }}>
+              <Image src="/blackbrain.png" alt="Normal brain" fill className="object-contain" priority />
+              <div
+                className={`absolute inset-0 transition-all duration-500 ease-out ${
+                  shouldShowPreview ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {selectedRegionData && (
+                  <div className="relative h-full w-full">
+                    <Image src={selectedRegionData.placeholder} alt={selectedRegionData.label} fill className="object-contain" priority />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
 
-          {/* Brick Brain */}
+          {/* Buttons list — scrolls if tall, appears once user reaches the reveal */}
+          <div
+            className={`w-full max-h-[42vh] overflow-y-auto transition-all duration-500 ${
+              showSidebar ? "opacity-100" : "hidden"
+            }`}
+          >
+            {sidebar}
+            {shouldShowPreview && selectedRegionData && selectedRegionData.learnMoreText.length > 0 && (
+              <button
+                onClick={() => setLearnMoreOpen(true)}
+                className="w-full rounded-lg bg-white px-5 py-3 font-semibold text-black transition hover:bg-gray-200"
+              >
+                Learn More
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Desktop layout: original overlapping full-screen ── */}
+        <div className="hidden lg:flex relative h-[90vh] w-[90vw] items-center justify-center">
           <div className="absolute inset-0">
-            <Image
-              src="/brickbrain.png"
-              alt="Brick wall and brain"
-              fill
-              className="object-contain"
-              priority
-            />
+            <Image src="/brickbrain.png" alt="Brick wall and brain" fill className="object-contain" priority />
           </div>
-
-          {/* Loop Brain */}
-          <div
-            className="absolute inset-0 transition-opacity"
-            style={{ opacity: loopOpacity }}
-          >
-            <Image
-              src="/loopbrain.png"
-              alt="Loop diagram"
-              fill
-              className="object-contain"
-              priority
-            />
+          <div className="absolute inset-0 transition-opacity" style={{ opacity: loopOpacity }}>
+            <Image src="/loopbrain.png" alt="Loop diagram" fill className="object-contain" priority />
           </div>
+          <div className="absolute inset-0 transition-opacity" style={{ opacity: blackBrainOpacity }}>
+            <Image src="/blackbrain.png" alt="Normal brain" fill className="object-contain scale-110" priority />
 
-          {/* Final Brain */}
-          <div
-            className="absolute inset-0 transition-opacity"
-            style={{ opacity: blackBrainOpacity }}
-          >
-            <Image
-              src="/blackbrain.png"
-              alt="Normal brain"
-              fill
-              className="object-contain scale-110"
-              priority
-            />
-
-            {/* Preview */}
             <div
               className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out ${
                 shouldShowPreview
@@ -185,14 +241,7 @@ export default function BrainScrollReveal() {
             >
               {selectedRegionData ? (
                 <div className="relative h-full w-full">
-                  <Image
-                    src={selectedRegionData.placeholder}
-                    alt={selectedRegionData.label}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-
+                  <Image src={selectedRegionData.placeholder} alt={selectedRegionData.label} fill className="object-cover" priority />
                   <div className="absolute bottom-6 left-6">
                     <button
                       onClick={() => setLearnMoreOpen(true)}
@@ -205,98 +254,38 @@ export default function BrainScrollReveal() {
               ) : null}
             </div>
 
-            {/* Popup */}
-            {learnMoreOpen && selectedRegionData && (
-              <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-300 ease-out">
-                <div className="mx-6 w-full max-w-2xl rounded-[28px] border border-white/15 bg-black/80 p-8 text-white shadow-2xl transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]">
-
-                  <div className="mb-4 flex justify-between">
-                    <h3 className="text-2xl font-bold">
-                      {selectedRegionData.label}
-                    </h3>
-
-                    <button
-                      onClick={() => setLearnMoreOpen(false)}
-                      className="text-sm text-white/70 hover:text-white"
-                    >
-                      Close
-                    </button>
-                  </div>
-
-                  <div className="space-y-4 text-white/80 leading-8">
-                    {selectedRegionData.learnMoreText.length > 0 ? (
-                      selectedRegionData.learnMoreText.map((paragraph, index) => (
-                        <p key={`${selectedRegionData.id}-paragraph-${index}`}>
-                          {paragraph}
-                        </p>
-                      ))
-                    ) : (
-                      <p>{selectedRegionData.description}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Sidebar */}
             <div
               className={`absolute right-10 top-1/2 w-[380px] -translate-y-1/2 transition-all duration-500 ${
-                showSidebar
-                  ? "translate-x-0 opacity-100"
-                  : "pointer-events-none translate-x-8 opacity-0"
+                showSidebar ? "translate-x-0 opacity-100" : "hidden"
               }`}
             >
-              {regions.map((region) => {
-                const active = selectedRegion === region.id;
-
-                return (
-                  <div
-                    key={region.id}
-                    className={`mb-4 overflow-hidden rounded-2xl border transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                      active
-                        ? "border-white bg-white text-black"
-                        : "border-white/20 bg-black/60 backdrop-blur-md"
-                    }`}
-                  >
-                    <button
-                      onClick={() => {
-                        if (region.id === "redirect") {
-                          router.push("/brain");
-                          return;
-                        }
-
-                        setSelectedRegion(region.id);
-                        setHasInteracted(true);
-                      }}
-                      className={`w-full px-8 py-6 text-left transition ${
-                        active ? "text-black" : "text-white hover:bg-white/10"
-                      }`}
-                    >
-                      <div className="text-2xl font-semibold">
-                        {region.label}
-                      </div>
-
-                      <div
-                        className={`grid transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-                          active
-                            ? "mt-2 grid-rows-[1fr] opacity-100"
-                            : "grid-rows-[0fr] opacity-0"
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <div className="text-base leading-7 text-black/70">
-                            {region.description}
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                );
-              })}
+              {sidebar}
             </div>
-
           </div>
         </div>
+
+        {/* ── Shared Learn More popup ── */}
+        {learnMoreOpen && selectedRegionData && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl sm:rounded-[28px] border border-white/15 bg-black/90 p-5 sm:p-8 text-white shadow-2xl">
+              <div className="mb-4 flex justify-between items-start">
+                <h3 className="text-xl sm:text-2xl font-bold">{selectedRegionData.label}</h3>
+                <button onClick={() => setLearnMoreOpen(false)} className="text-sm text-white/70 hover:text-white ml-4 shrink-0">
+                  Close
+                </button>
+              </div>
+              <div className="space-y-4 text-sm sm:text-base text-white/80 leading-7 sm:leading-8">
+                {selectedRegionData.learnMoreText.length > 0 ? (
+                  selectedRegionData.learnMoreText.map((paragraph, index) => (
+                    <p key={`${selectedRegionData.id}-paragraph-${index}`}>{paragraph}</p>
+                  ))
+                ) : (
+                  <p>{selectedRegionData.description}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -131,14 +131,14 @@ export default function BrainInteractive() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <div className="text-center pt-12 px-4">
-        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.35em] text-[#ce55a5]">
+      <div className="text-center pt-8 sm:pt-12 px-4">
+        <p className="mb-2 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-[#ce55a5]">
           Interactive Brain Map
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight">
           Explore the brain regions linked to nicotine addiction
         </h1>
-        <p className="mt-3 text-sm text-white/50">Scroll to zoom through each region, or click a button</p>
+        <p className="mt-3 text-xs sm:text-sm text-white/50">Scroll to zoom through each region, or tap a button</p>
       </div>
 
       <section ref={sectionRef} className="relative h-[500vh]">
@@ -150,10 +150,10 @@ export default function BrainInteractive() {
             !pinned && progress <= 0 ? "top-0 h-screen" : ""
           ].join(" ")}
         >
-          <div className="w-full max-w-6xl mx-auto px-4 flex flex-col lg:flex-row items-center gap-6 justify-center">
+          <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 flex flex-col lg:flex-row items-center gap-4 sm:gap-6 justify-center">
             {/* Main brain image */}
-            <div className="w-full max-w-2xl">
-              <div className="relative w-full aspect-[754/639] rounded-2xl overflow-hidden bg-[#060a12] border border-white/[0.07] shadow-[0_0_90px_rgba(206,85,165,0.1),inset_0_0_50px_rgba(0,0,0,0.5)]">
+            <div className="w-full max-w-md sm:max-w-lg lg:max-w-2xl">
+              <div className="relative w-full aspect-[754/639] rounded-xl sm:rounded-2xl overflow-hidden bg-[#060a12] border border-white/[0.07] shadow-[0_0_90px_rgba(206,85,165,0.1),inset_0_0_50px_rgba(0,0,0,0.5)]">
                 {!selectedRegion && stages.map((stage, i) => (
                   <div key={stage.src} className="absolute inset-0" style={{ opacity: stageOpacity(i) }}>
                     <Image
@@ -192,23 +192,23 @@ export default function BrainInteractive() {
                 {showLearnMore && (
                   <button
                     onClick={() => setLearnMoreOpen(true)}
-                    className="absolute bottom-6 left-6 rounded-lg bg-white px-5 py-3 font-semibold text-black transition hover:bg-gray-200 z-20"
+                    className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 rounded-lg bg-white px-3 py-2 sm:px-5 sm:py-3 text-sm sm:text-base font-semibold text-black transition hover:bg-gray-200 z-20"
                   >
                     Learn More
                   </button>
                 )}
 
-                <span className="absolute top-3 left-3 font-mono text-[10px] text-white/20 select-none" aria-hidden>
+                <span className="absolute top-2 left-2 sm:top-3 sm:left-3 font-mono text-[9px] sm:text-[10px] text-white/20 select-none" aria-hidden>
                   BIGGY·BRAIN
                 </span>
-                <span className="absolute top-3 right-3 font-mono text-[10px] text-white/20 select-none" aria-hidden>
+                <span className="absolute top-2 right-2 sm:top-3 sm:right-3 font-mono text-[9px] sm:text-[10px] text-white/20 select-none" aria-hidden>
                   INTERACTIVE
                 </span>
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="w-full max-w-sm space-y-3">
+            <div className="w-full max-w-md sm:max-w-lg lg:max-w-sm space-y-2 sm:space-y-3">
               {REGIONS.map((region) => {
                 const isActive = activeRegion?.id === region.id;
                 return (
@@ -217,20 +217,20 @@ export default function BrainInteractive() {
                     type="button"
                     onClick={() => setSelectedId(region.id)}
                     className={[
-                      "w-full rounded-2xl border px-5 py-4 text-left transition-all duration-300",
+                      "w-full rounded-xl sm:rounded-2xl border px-4 py-3 sm:px-5 sm:py-4 text-left transition-all duration-300",
                       isActive
                         ? "border-[#ce55a5] bg-white text-black"
                         : "border-white/10 bg-black/60 backdrop-blur-md text-white hover:bg-white/10",
                     ].join(" ")}
                   >
-                    <div className="text-base font-semibold">{region.title}</div>
+                    <div className="text-sm sm:text-base font-semibold">{region.title}</div>
                     <div
                       className={`grid transition-all duration-400 ${
                         isActive && region.short ? "mt-2 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="text-sm font-semibold leading-6 text-black">{region.short}</p>
+                        <p className="text-xs sm:text-sm font-semibold leading-5 sm:leading-6 text-black">{region.short}</p>
                       </div>
                     </div>
                   </button>
@@ -243,17 +243,17 @@ export default function BrainInteractive() {
 
       {learnMoreOpen && activeRegion && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl rounded-[28px] border border-white/15 bg-black/90 p-8 text-white shadow-2xl">
+          <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl sm:rounded-[28px] border border-white/15 bg-black/90 p-5 sm:p-8 text-white shadow-2xl">
             <div className="mb-4 flex justify-between items-start">
-              <h3 className="text-2xl font-bold">{activeRegion.title}</h3>
+              <h3 className="text-xl sm:text-2xl font-bold">{activeRegion.title}</h3>
               <button
                 onClick={() => setLearnMoreOpen(false)}
-                className="text-sm text-white/70 hover:text-white ml-4"
+                className="text-sm text-white/70 hover:text-white ml-4 shrink-0"
               >
                 Close
               </button>
             </div>
-            <p className="text-white/80 leading-8">{activeRegion.long}</p>
+            <p className="text-sm sm:text-base text-white/80 leading-7 sm:leading-8">{activeRegion.long}</p>
           </div>
         </div>
       )}
