@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function BrainScrollReveal() {
@@ -182,13 +181,13 @@ export default function BrainScrollReveal() {
         <div className="flex lg:hidden flex-col w-full h-full px-3 pt-3 pb-4 gap-3">
           <div className="relative w-full flex-1 min-h-0 rounded-2xl overflow-hidden bg-black">
             <div className="absolute inset-0">
-              <Image src="/brickbrain.png" alt="Brick wall and brain" fill className="object-contain" priority />
+              <img src="/brickbrain.png" alt="Brick wall and brain" className="absolute inset-0 object-contain w-full h-full" />
             </div>
             <div className="absolute inset-0 transition-opacity" style={{ opacity: loopOpacity }}>
-              <Image src="/loopbrain.png" alt="Loop diagram" fill className="object-contain" priority />
+              <img key={loopOpacity > 0 ? "gif-active" : "gif-hidden"} src="/loopbrain.gif" alt="Loop diagram" className="absolute inset-0 object-contain w-full h-full" />
             </div>
             <div className="absolute inset-0 transition-opacity" style={{ opacity: blackBrainOpacity }}>
-              <Image src="/blackbrain.png" alt="Normal brain" fill className="object-contain" priority />
+              <img src="/blackbrain.png" alt="Normal brain" className="absolute inset-0 object-contain w-full h-full" />
               <div
                 className={`absolute inset-0 transition-all duration-500 ease-out ${
                   shouldShowPreview ? "opacity-100" : "opacity-0"
@@ -196,7 +195,7 @@ export default function BrainScrollReveal() {
               >
                 {selectedRegionData && (
                   <div className="relative h-full w-full">
-                    <Image src={selectedRegionData.placeholder} alt={selectedRegionData.label} fill className="object-contain" priority />
+                    <img src={selectedRegionData.placeholder} alt={selectedRegionData.label} className="absolute inset-0 object-contain w-full h-full" />
                   </div>
                 )}
               </div>
@@ -224,13 +223,13 @@ export default function BrainScrollReveal() {
         {/* ── Desktop layout: original overlapping full-screen ── */}
         <div className="hidden lg:flex relative h-[90vh] w-[90vw] items-center justify-center">
           <div className="absolute inset-0">
-            <Image src="/brickbrain.png" alt="Brick wall and brain" fill className="object-contain" priority />
+            <img src="/brickbrain.png" alt="Brick wall and brain" className="absolute inset-0 object-contain w-full h-full" />
           </div>
           <div className="absolute inset-0 transition-opacity" style={{ opacity: loopOpacity }}>
-            <Image src="/loopbrain.png" alt="Loop diagram" fill className="object-contain" priority />
+            <img key={loopOpacity > 0 ? "gif-active" : "gif-hidden"} src="/loopbrain.gif" alt="Loop diagram" className="absolute inset-0 object-contain w-full h-full" />
           </div>
           <div className="absolute inset-0 transition-opacity" style={{ opacity: blackBrainOpacity }}>
-            <Image src="/blackbrain.png" alt="Normal brain" fill className="object-contain scale-110" priority />
+            <img src="/blackbrain.png" alt="Normal brain" className="absolute inset-0 object-contain scale-110 w-full h-full" />
 
             <div
               className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out ${
@@ -241,7 +240,7 @@ export default function BrainScrollReveal() {
             >
               {selectedRegionData ? (
                 <div className="relative h-full w-full">
-                  <Image src={selectedRegionData.placeholder} alt={selectedRegionData.label} fill className="object-cover" priority />
+                  <img src={selectedRegionData.placeholder} alt={selectedRegionData.label} className="absolute inset-0 object-cover w-full h-full" />
                   <div className="absolute bottom-6 left-6">
                     <button
                       onClick={() => setLearnMoreOpen(true)}
