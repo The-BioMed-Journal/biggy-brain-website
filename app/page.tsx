@@ -1,8 +1,10 @@
 import BrainScrollReveal from "./BrainScrollReveal";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function HomePage() {
   return (
     <main className="bg-black min-h-screen pb-20">
+      <Analytics />
       {/* Page Title - Mimics .home-title from style.css */}
       <h1 className="text-center mt-14 mb-12 text-5xl md:text-6xl font-serif font-bold tracking-tight text-white">
         Nicotine Addiction : Zoomed In
